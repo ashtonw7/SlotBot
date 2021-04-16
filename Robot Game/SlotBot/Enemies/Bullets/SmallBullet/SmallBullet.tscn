@@ -5,16 +5,16 @@
 [ext_resource path="res://Enemies/Bullets/Sprites/smallbulllet3.png" type="Texture" id=3]
 [ext_resource path="res://Enemies/Bullets/SmallBullet/SmallBullet.gd" type="Script" id=4]
 
-[sub_resource type="CircleShape2D" id=1]
-radius = 2.0
-
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=1]
 animations = [ {
 "frames": [ ExtResource( 2 ), ExtResource( 1 ), ExtResource( 3 ) ],
 "loop": true,
 "name": "explode",
 "speed": 20.0
 } ]
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 2.0
 
 [node name="KinematicBody2D" type="KinematicBody2D"]
 pause_mode = 2
@@ -23,12 +23,12 @@ collision_layer = 2
 collision_mask = 4
 script = ExtResource( 4 )
 
-[node name="Hitbox" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
-
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-frames = SubResource( 2 )
+frames = SubResource( 1 )
 animation = "explode"
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
 position = Vector2( -4.76837e-07, 5.96046e-07 )
@@ -40,6 +40,6 @@ scale = Vector2( 0.2, 0.2 )
 collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerHitbox"]
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 [connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
 [connection signal="viewport_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_viewport_exited"]

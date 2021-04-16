@@ -18,6 +18,7 @@ onready var lucky_lights = body.get_node("Lights/Lucky")
 onready var lucky_lights_body = body.get_node("Lights/LuckyBody")
 onready var hitbox = $Hitbox
 onready var hurtbox = $Hurtbox
+onready var bullet_start = $BulletStart
 
 # deal with jumping
 var jumping := false
@@ -32,11 +33,13 @@ enum {LEFT, RIGHT}
 var direction = RIGHT
 
 # current weapon
-enum Weapon {DEFAULT, QUICK, BIG, SHOTGUN, LASER, BIGSHOTGUN, RAPID}
-var curr_weapon = Weapon.DEFAULT
+enum Weapons {DEFAULT, QUICK, BIG, SHOTGUN, LASER, BIGSHOTGUN, RAPID}
+var curr_weapon = Weapons.DEFAULT
+
+var small_bullet = preload("res://Player/Weapons/Default/DefaultBullet.tscn")
 
 # determines whether or not you can shoot (cooldown between shots)
-var can_shoot = false
+var can_shoot = true
 
 # if true, player is damaged and has i-frames
 var damaged = false
@@ -89,12 +92,14 @@ func handle_direction():
 		lucky_lights.position.x = -4
 		lucky_lights_body.position.x = -2
 		$Body.get_node("Lights/Numbers").position.x = 0
+		bullet_start.position.x = 4
 		hitbox.position.x = -1
 	else:
 		body.flip_h = false
 		lucky_lights.position.x = 0
 		lucky_lights_body.position.x = 1
 		$Body.get_node("Lights/Numbers").position.x = 0
+		bullet_start.position.x = 4
 		hitbox.position.x = 0
 		
 #	if get_global_mouse_position() < position:
@@ -126,6 +131,7 @@ func animate_sprite():
 			lucky_lights.position.x = 0
 			lucky_lights_body.position.x = 1
 			$Body.get_node("Lights/Numbers").position.x = 0
+			bullet_start.position.x = 0
 			hitbox.position.x = 0		
 
 		else:
@@ -133,6 +139,7 @@ func animate_sprite():
 			lucky_lights.position.x = -4
 			$Body.get_node("Lights/Numbers").position.x = -4
 			lucky_lights_body.position.x = -2
+			bullet_start.position.x = 4
 			hitbox.position.x = -1
 
 		body.play('wall_slide')
@@ -211,8 +218,20 @@ func take_damage():
 	
 func change_weapon(weapon):
 	curr_weapon = weapon
-	if curr_weapon == 0:
+	if curr_weapon == Weapons.DEFAULT:
 		$ShootTimer.wait_time = 0.8
+		
+func shoot():
+	if Input.is_action_pressed("shoot") and can_shoot:
+		print("HERE")	
+		can_shoot = false
+		$ShootTimer.start()
+		if curr_weapon == Weapons.DEFAULT:
+			print(position, bullet_start.position)
+			print(bullet_start.position, " ", bullet_start.global_position)
+			var new_bullet = small_bullet.instance()
+			new_bullet.setup(bullet_start.global_position.direction_to(get_global_mouse_position()), bullet_start.global_position)
+			get_parent().add_child(new_bullet)
 
 # idle movement when starting
 func _ready():
@@ -237,6 +256,9 @@ func _physics_process(delta):
 	
 	# deal with animation
 	animate_sprite()
+	
+	# deal with shooting
+	shoot()
 	
 	# apply graivity and clamp it so it maxes out at max gravity
 	if velocity.y < max_gravity:
@@ -286,4 +308,4 @@ func _on_FreezeTimer_timeout():
 
 
 func _on_ShootTimer_timeout():
-	pass # Replace with function body.
+	can_shoot = true

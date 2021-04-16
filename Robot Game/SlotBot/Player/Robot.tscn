@@ -105,12 +105,13 @@ script = ExtResource( 5 )
 
 [node name="Lucky" type="AnimatedSprite" parent="Body/Lights"]
 frames = SubResource( 2 )
+frame = 5
 playing = true
 
 [node name="LuckyBody" type="AnimatedSprite" parent="Body/Lights"]
 position = Vector2( 1, 3 )
 frames = SubResource( 3 )
-frame = 4
+frame = 2
 playing = true
 
 [node name="Numbers" type="AnimatedSprite" parent="Body/Lights"]
@@ -170,6 +171,9 @@ rotation = -1.5708
 scale = Vector2( 1, 0.15 )
 enabled = true
 collision_mask = 4
+
+[node name="BulletStart" type="Node2D" parent="."]
+position = Vector2( 2, 4 )
 [connection signal="timeout" from="JumpTimer" to="." method="_on_JumpTimer_timeout"]
 [connection signal="timeout" from="WallJumpTimer" to="." method="_on_WallJumpTimer_timeout"]
 [connection signal="timeout" from="DamageTimer" to="." method="_on_DamageTimer_timeout"]
