@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Enemies/SpikeBot/Sprites/spikebot1.png" type="Texture" id=1]
+[ext_resource path="res://Enemies/SpikeBot/Sprites/spikebot2.png" type="Texture" id=2]
+[ext_resource path="res://Enemies/SpikeBot/SpikeBot.gd" type="Script" id=3]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 5.0
+height = 2.0
+
+[node name="Spikebot" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 7
+script = ExtResource( 3 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 3 )
+rotation = 1.5708
+shape = SubResource( 2 )
+
+[node name="RightCheck" type="RayCast2D" parent="."]
+position = Vector2( 7, 0 )
+scale = Vector2( 0.2, 0.2 )
+enabled = true
+collision_mask = 4
+
+[node name="LeftCheck" type="RayCast2D" parent="."]
+position = Vector2( -7, 0 )
+scale = Vector2( 0.2, 0.2 )
+enabled = true
+collision_mask = 4
+
+[node name="Hitbox" type="Area2D" parent="." groups=[
+"enemy",
+]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2( 0, 3 )
+rotation = 1.5708
+shape = SubResource( 2 )

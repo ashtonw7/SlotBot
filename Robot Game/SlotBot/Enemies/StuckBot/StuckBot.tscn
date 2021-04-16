@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Enemies/StuckBot/Sprites/stuckbot2.png" type="Texture" id=1]
+[ext_resource path="res://Enemies/StuckBot/Sprites/stuckbot3.png" type="Texture" id=2]
+[ext_resource path="res://Enemies/StuckBot/Sprites/stuckbot1.png" type="Texture" id=3]
+[ext_resource path="res://Enemies/StuckBot/StuckBot.gd" type="Script" id=4]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 3 ), ExtResource( 1 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "shooting",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 6, 5 )
+
+[node name="StuckBot" type="AnimatedSprite"]
+frames = SubResource( 1 )
+animation = "shooting"
+playing = true
+offset = Vector2( 0, -4 )
+script = ExtResource( 4 )
+
+[node name="PostShotTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="ShootTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Hitbox" type="Area2D" parent="." groups=[
+"enemy",
+]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2( 0, -1 )
+shape = SubResource( 2 )
+[connection signal="timeout" from="PostShotTimer" to="." method="_on_PostShotTimer_timeout"]
+[connection signal="timeout" from="ShootTimer" to="." method="_on_ShootTimer_timeout"]

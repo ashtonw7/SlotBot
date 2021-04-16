@@ -1,0 +1,62 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://Enemies/BirdBot/Sprites/spikebird3.png" type="Texture" id=1]
+[ext_resource path="res://Enemies/BirdBot/Sprites/spikebird5.png" type="Texture" id=2]
+[ext_resource path="res://Enemies/BirdBot/Sprites/spikebird6.png" type="Texture" id=3]
+[ext_resource path="res://Enemies/BirdBot/Sprites/spikebird7.png" type="Texture" id=4]
+[ext_resource path="res://Enemies/BirdBot/Sprites/spikebird1.png" type="Texture" id=5]
+[ext_resource path="res://Enemies/BirdBot/Sprites/spikebird4.png" type="Texture" id=6]
+[ext_resource path="res://Enemies/BirdBot/Sprites/spikebird2.png" type="Texture" id=7]
+[ext_resource path="res://Enemies/BirdBot/BirdBot.gd" type="Script" id=8]
+[ext_resource path="res://Enemies/BirdBot/Sprites/eye_animation3.png" type="Texture" id=9]
+[ext_resource path="res://Enemies/BirdBot/Sprites/eye_animation1.png" type="Texture" id=10]
+[ext_resource path="res://Enemies/BirdBot/Sprites/eye_animation2.png" type="Texture" id=11]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 5 ), ExtResource( 7 ), ExtResource( 1 ) ],
+"loop": true,
+"name": "charging",
+"speed": 11.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "attacking",
+"speed": 11.0
+} ]
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 10 ), ExtResource( 11 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 9, 5 )
+
+[node name="BirdBot" type="KinematicBody2D"]
+script = ExtResource( 8 )
+
+[node name="Body" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "attacking"
+playing = true
+
+[node name="Eyes" type="AnimatedSprite" parent="."]
+position = Vector2( -2, 0 )
+frames = SubResource( 2 )
+
+[node name="ChargingTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="Hitbox" type="Area2D" parent="." groups=[
+"enemy",
+]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2( -4, 1 )
+shape = SubResource( 3 )
+[connection signal="timeout" from="ChargingTimer" to="." method="_on_ChargingTimer_timeout"]
